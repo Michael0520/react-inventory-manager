@@ -1,6 +1,6 @@
-import Button, { ButtonAction } from "components/Button";
+import { ButtonAction } from "components/Button";
 import { PersonCounter } from "components/PersonCounter";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -57,6 +57,7 @@ const updateRoomForAction = (
 const App: React.FC = () => {
   const totalGuests = 10;
   const maxGuestsPerRoom = 4;
+
   const [rooms, setRooms] = useState<Room[]>([
     { adults: 1, children: 0 },
     { adults: 1, children: 0 },
