@@ -10,51 +10,6 @@ interface Room {
   children: number;
 }
 
-const updateRoom = (
-  room: Room,
-  type: "adults" | "children",
-  newValue: number,
-  maxGuestsPerRoom: number,
-  totalGuests: number,
-  totalInRooms: number
-): Room => {
-  const newRoom = { ...room };
-  const otherType = type === "adults" ? "children" : "adults";
-  const newTotal = newValue + newRoom[otherType];
-
-  if (newTotal > maxGuestsPerRoom) {
-    newValue = maxGuestsPerRoom - newRoom[otherType];
-  }
-
-  const addedGuests = newValue - newRoom[type];
-  if (totalInRooms + addedGuests > totalGuests) {
-    newValue = newRoom[type] + (totalGuests - totalInRooms);
-  }
-
-  newRoom[type] = newValue;
-
-  return newRoom;
-};
-const updateRoomForAction = (
-  room: Room,
-  type: "adults" | "children",
-  action: ButtonAction,
-  maxGuestsPerRoom: number,
-  totalGuests: number,
-  totalInRooms: number
-): Room => {
-  const newRoom = { ...room };
-  const totalOccupancy = newRoom.adults + newRoom.children;
-
-  if (action === ButtonAction.Increment && totalOccupancy < maxGuestsPerRoom) {
-    newRoom[type]++;
-  }
-  if (action === ButtonAction.Decrement && newRoom[type] > 0) {
-    newRoom[type]--;
-  }
-  return newRoom;
-};
-
 const createPersonCounterProps = (
   room: Room,
   index: number,
