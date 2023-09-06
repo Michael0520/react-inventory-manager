@@ -1,5 +1,6 @@
 import { ButtonAction } from "components/Button";
 import { PersonCounter } from "components/PersonCounter";
+import { useRoomManagement } from "hook/useRoomManagement";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -54,79 +55,41 @@ const updateRoomForAction = (
   return newRoom;
 };
 
+const createPersonCounterProps = (
+  room: Room,
+  index: number,
+  type: "adults" | "children",
+  totalInRooms: number,
+  maxGuestsPerRoom: number,
+  totalGuests: number,
+  handleChange: Function,
+  handleInputChange: Function
+) => ({
+  label: type === "adults" ? "大人" : "小孩",
+  subLabel: type === "adults" ? "年齡 20+" : undefined,
+  count: room[type],
+  isDisabledIncrement:
+    room.adults + room.children >= maxGuestsPerRoom ||
+    totalInRooms >= totalGuests,
+  isDisabledDecrement: room[type] <= (type === "adults" ? 1 : 0),
+  onIncrement: () => handleChange(index, type, ButtonAction.Increment),
+  onDecrement: () => handleChange(index, type, ButtonAction.Decrement),
+  onChangeValue: (newCount: number) =>
+    handleInputChange(index, type, newCount.toString()),
+});
+
 const App: React.FC = () => {
   const totalGuests = 10;
   const maxGuestsPerRoom = 4;
 
-  const [rooms, setRooms] = useState<Room[]>([
+  const initialRooms = [
     { adults: 1, children: 0 },
     { adults: 1, children: 0 },
     { adults: 1, children: 0 },
-  ]);
+  ];
 
-  const totalInRooms = rooms.reduce(
-    (acc, room) => acc + room.adults + room.children,
-    0
-  );
-
-  const unallocated = totalGuests - totalInRooms;
-
-  const handleChange = (
-    roomIndex: number,
-    type: "adults" | "children",
-    action: ButtonAction
-  ) => {
-    if (totalInRooms >= totalGuests && action === ButtonAction.Increment) {
-      return;
-    }
-
-    setRooms((prevRooms) => {
-      return prevRooms.map((room, index) => {
-        if (index !== roomIndex) return room;
-
-        return updateRoomForAction(
-          room,
-          type,
-          action,
-          maxGuestsPerRoom,
-          totalGuests,
-          totalInRooms
-        );
-      });
-    });
-  };
-
-  const handleInputChange = (
-    roomIndex: number,
-    type: "adults" | "children",
-    newValue: number | string
-  ) => {
-    let numericValue =
-      typeof newValue === "string" ? parseInt(newValue, 10) : newValue;
-
-    if (isNaN(numericValue)) {
-      return;
-    }
-
-    if (type === "adults" && numericValue < 1) {
-      numericValue = 1;
-    }
-
-    setRooms((prevRooms) => {
-      return prevRooms.map((room, index) => {
-        if (index !== roomIndex) return room;
-
-        return updateRoom(
-          room,
-          type,
-          numericValue,
-          maxGuestsPerRoom,
-          totalGuests,
-          totalInRooms
-        );
-      });
-    });
-  };
+  const { rooms, totalInRooms, unallocated, handleChange, handleInputChange } =
+    useRoomManagement(initialRooms, totalGuests, maxGuestsPerRoom);
 
   useEffect(() => {
     if (totalInRooms === 10) {
@@ -157,54 +120,30 @@ const App: React.FC = () => {
 
         {/* Data Group */}
         {rooms.map((room, index) => {
-          const isDisabledIncrementCommon =
-            room.adults + room.children >= maxGuestsPerRoom ||
-            totalInRooms >= totalGuests;
-
-          const personCounterPropsCommon = {
-            onIncrement: (type: "adults" | "children") =>
-              handleChange(index, type, ButtonAction.Increment),
-            onDecrement: (type: "adults" | "children") =>
-              handleChange(index, type, ButtonAction.Decrement),
-            isDisabledIncrement: isDisabledIncrementCommon,
-            onChangeValue: (newCount: number, type: "adults" | "children") =>
-              handleInputChange(index, type, newCount.toString()),
-          };
-
+          const adultProps = createPersonCounterProps(
+            room,
+            index,
+            "adults",
+            totalInRooms,
+            maxGuestsPerRoom,
+            totalGuests,
+            handleChange,
+            handleInputChange
+          );
+          const childrenProps = createPersonCounterProps(
+            room,
+            index,
+            "children",
+            totalInRooms,
+            maxGuestsPerRoom,
+            totalGuests,
+            handleChange,
+            handleInputChange
+          );
           return (
             <div key={index} className="flex flex-col gap-4">
-              <PersonCounter
-                {...personCounterPropsCommon}
-                label="大人"
-                subLabel="年齡 20+"
-                count={room.adults}
-                isDisabledDecrement={room.adults <= 1}
-                onIncrement={() =>
-                  personCounterPropsCommon.onIncrement("adults")
-                }
-                onDecrement={() =>
-                  personCounterPropsCommon.onDecrement("adults")
-                }
-                onChangeValue={(newCount) =>
-                  personCounterPropsCommon.onChangeValue(newCount, "adults")
-                }
-              />
-
-              <PersonCounter
-                {...personCounterPropsCommon}
-                label="小孩"
-                count={room.children}
-                isDisabledDecrement={room.children <= 0}
-                onIncrement={() =>
-                  personCounterPropsCommon.onIncrement("children")
-                }
-                onDecrement={() =>
-                  personCounterPropsCommon.onDecrement("children")
-                }
-                onChangeValue={(newCount) =>
-                  personCounterPropsCommon.onChangeValue(newCount, "children")
-                }
-              />
+              <PersonCounter {...adultProps} />
+              <PersonCounter {...childrenProps} />
             </div>
           );
         })}
