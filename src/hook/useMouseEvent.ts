@@ -4,7 +4,7 @@ type MouseEvents = {
     onMouseLeave: () => void;
 };
 
-const useMouseEvent = (mouseDownCallback: () => void, mouseUpCallback: () => void): MouseEvents => {
+export const useMouseEvent = (mouseDownCallback: () => void, mouseUpCallback: () => void): MouseEvents => {
     const onMouseDown = () => {
         mouseDownCallback();
     };
@@ -17,6 +17,7 @@ const useMouseEvent = (mouseDownCallback: () => void, mouseUpCallback: () => voi
         mouseUpCallback();
     };
 
+
     return {
         onMouseDown,
         onMouseUp,
@@ -24,4 +25,3 @@ const useMouseEvent = (mouseDownCallback: () => void, mouseUpCallback: () => voi
     };
 };
 
-export default useMouseEvent;
