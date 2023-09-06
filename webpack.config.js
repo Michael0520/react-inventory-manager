@@ -27,9 +27,10 @@ module.exports = {
     preferRelative: true,
   },
   output: {
-    path: __dirname + "/dist",
+    path: path.resolve(__dirname, "public"),
     publicPath: "/",
     filename: "bundle.js",
+    clean: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
