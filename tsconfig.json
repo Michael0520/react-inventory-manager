@@ -7,14 +7,15 @@
     "noImplicitAny": true,
     "module": "ES6",
     "target": "ES5",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "utils": ["/utils"],
-      "components": ["/components"]
+      "@/*": ["./src/*"],
+      "@utils/*": ["./src/utils"],
+      "@components/*": ["./src/components"]
     }
   },
-  "include": ["./src"]
+  "include": ["src"]
 }

@@ -4,11 +4,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
   mode: "development",
   entry: "./src/main.tsx",
-  output: {
-    path: path.join(__dirname, "/dist"),
-    chunkFilename: "scripts/[name].[fullhash:8].bundle.js",
-    filename: "scripts/[name].[fullhash:8].bundle.js",
-  },
   module: {
     rules: [
       {
@@ -29,6 +24,10 @@ module.exports = {
   },
   resolve: {
     extensions: [".tsx", ".jsx", ".js", ".ts"],
+    alias: {
+      "@": resolve(__dirname, "src"),
+    },
+    preferRelative: true,
   },
   output: {
     path: __dirname + "/dist",
