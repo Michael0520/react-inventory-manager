@@ -1,7 +1,7 @@
 {
   "name": "react-inventory-manager",
   "version": "1.0.0",
-  "description": "",
+  "description": "A React-based inventory management system designed to streamline stock-keeping and real-time inventory tracking.",
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --mode development",
