@@ -1,5 +1,8 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -25,6 +28,7 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".jsx", ".js", ".ts"],
     preferRelative: true,
+    plugins: [new TsconfigPathsPlugin()],
   },
   output: {
     path: path.resolve(__dirname, "public"),
@@ -36,6 +40,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "./index.html",
     }),
+    new CompressionPlugin(),
+    new CleanWebpackPlugin(),
   ],
   devServer: {
     port: 3333,
