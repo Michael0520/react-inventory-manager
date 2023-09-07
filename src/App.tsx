@@ -97,6 +97,8 @@ const App: React.FC = () => {
           );
           return (
             <div key={index} className="flex flex-col gap-4">
+              <div className="h-[2px] bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-500 rounded-full my-4 shadow-lg"></div>
+
               <PersonCounter {...adultProps} />
               <PersonCounter {...childrenProps} />
             </div>
