@@ -28,12 +28,12 @@ export const PersonCounter: React.FC<PersonCounterProps> = ({
     } else {
       onChangeValue(newValue);
     }
-    console.log(e.target.name, e.target.value);
+    // console.log(e.target.name, e.target.value);
   };
 
   const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     // handle input blur logic here
-    console.log(e.target.name, e.target.value);
+    // console.log(e.target.name, e.target.value);
   };
 
   return (

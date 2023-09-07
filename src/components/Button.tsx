@@ -1,5 +1,4 @@
 import { useTimer } from "../hook/useTimer";
-import { useMouseEvent } from "../hook/useMouseEvent";
 import { useMouseAndTouchEvents } from "hook/useMouseAndTouchEvents";
 
 export enum ButtonAction {
