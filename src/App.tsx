@@ -7,7 +7,11 @@ const App: React.FC = () => {
   return (
     <div className="flex items-center justify-center h-screen bg-slate-300">
       <div className="flex flex-col gap-4 w-96 border-4 border-dashed border-black p-4 bg-slate-100">
-        <RoomAllocation guest={10} room={3} />
+        <RoomAllocation
+          guest={10}
+          room={3}
+          onChange={(result) => console.log(result)}
+        />
       </div>
       <ToastContainer />
     </div>

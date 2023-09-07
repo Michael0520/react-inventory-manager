@@ -8,9 +8,14 @@ import { toast } from "react-toastify";
 type RoomAllocationProps = {
   guest: number;
   room: number;
+  onChange: (rooms: { adults: number; children: number }[]) => void;
 };
 
-const RoomAllocation: React.FC<RoomAllocationProps> = ({ guest, room }) => {
+const RoomAllocation: React.FC<RoomAllocationProps> = ({
+  guest,
+  room,
+  onChange,
+}) => {
   const maxGuestsPerRoom = 4;
 
   const initialRooms: Room[] = Array.from({ length: room }, () => ({
@@ -41,6 +46,10 @@ const RoomAllocation: React.FC<RoomAllocationProps> = ({ guest, room }) => {
       });
     }
   }, [totalInRooms]);
+
+  useEffect(() => {
+    onChange(rooms);
+  }, [rooms, onChange]);
 
   return (
     <div className="flex flex-col gap-4">
