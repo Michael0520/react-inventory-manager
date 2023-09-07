@@ -1,35 +1,29 @@
-import { useEffect, useRef } from "react";
+import { useRef, useCallback } from 'react';
 
-export const useTimer = (callback: () => void, delay: number) => {
-    const savedCallback = useRef(callback);
-    const timerId = useRef<NodeJS.Timeout | null>(null);
+export const useTimer = (callback: () => void, initialDelay: number, continuousDelay: number) => {
+    const callbackRef = useRef(callback);
+    const initialTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const continuousTimerRef = useRef<NodeJS.Timeout | null>(null);
 
 
-    useEffect(() => {
-        savedCallback.current = callback;
-    }, [callback]);
+    callbackRef.current = callback;
 
-    const startTimer = () => {
-        if (timerId.current === null) {
-            timerId.current = setInterval(() => {
-                savedCallback.current();
-            }, delay);
-        }
-    };
+    const startTimer = useCallback(() => {
+        // 單次觸發
+        callbackRef.current();
 
-    const clearTimer = () => {
-        if (timerId.current !== null) {
-            clearInterval(timerId.current);
-            timerId.current = null;
-        }
-    };
+        // 設置初始定時器
+        initialTimerRef.current = setTimeout(() => {
+            // 設置連續定時器
+            continuousTimerRef.current = setInterval(() => {
+                callbackRef.current();
+            }, continuousDelay);
+        }, initialDelay);
+    }, [initialDelay, continuousDelay]);
 
-    useEffect(() => {
-        return () => {
-            if (timerId.current !== null) {
-                clearInterval(timerId.current);
-            }
-        };
+    const clearTimer = useCallback(() => {
+        if (initialTimerRef.current) clearTimeout(initialTimerRef.current);
+        if (continuousTimerRef.current) clearInterval(continuousTimerRef.current);
     }, []);
 
     return { startTimer, clearTimer };

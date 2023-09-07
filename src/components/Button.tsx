@@ -13,7 +13,13 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({ disabled, action, onClick }) => {
-  const { startTimer, clearTimer } = useTimer(onClick, 1000);
+  const { startTimer, clearTimer } = useTimer(
+    () => {
+      onClick();
+    },
+    500,
+    100
+  );
 
   const mouseEvents = useMouseEvent(
     () => {
@@ -33,7 +39,6 @@ const Button: React.FC<ButtonProps> = ({ disabled, action, onClick }) => {
   return (
     <button
       className={`select-none w-12 h-12 text-2xl border-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${disableButtonStyle}`}
-      onClick={onClick}
       disabled={disabled}
       {...mouseEvents}
     >
