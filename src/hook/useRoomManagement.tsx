@@ -74,6 +74,7 @@ export const useRoomManagement = (
     type: "adults" | "children",
     action: ButtonAction
   ) => {
+    // 現有的條件，防止遞增超過 totalGuests
     if (totalInRooms >= totalGuests && action === ButtonAction.Increment) {
       return;
     }
@@ -81,6 +82,15 @@ export const useRoomManagement = (
     setRooms((prevRooms) => {
       return prevRooms.map((room, index) => {
         if (index !== roomIndex) return room;
+
+        // 只在大人的情況下防止遞減到小於 1
+        if (
+          type === "adults" &&
+          action === ButtonAction.Decrement &&
+          room[type] <= 1
+        ) {
+          return room;
+        }
 
         return updateRoomForAction(
           room,

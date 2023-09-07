@@ -1,33 +1,36 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef } from "react";
 
-export const useTimer = (action: () => void, delay: number = 1000, immediate: boolean = false) => {
-    const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+export const useTimer = (callback: () => void, delay: number) => {
+    const savedCallback = useRef(callback);
+    const timerId = useRef<NodeJS.Timeout | null>(null);
+
+
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
 
     const startTimer = () => {
-        if (immediate) {
-            action();
+        if (timerId.current === null) {
+            timerId.current = setInterval(() => {
+                savedCallback.current();
+            }, delay);
         }
-        const newTimer = setInterval(() => {
-            action();
-        }, delay);
-        setTimer(newTimer);
     };
 
     const clearTimer = () => {
-        if (timer !== null) {
-            clearInterval(timer);
-            setTimer(null);
+        if (timerId.current !== null) {
+            clearInterval(timerId.current);
+            timerId.current = null;
         }
     };
 
     useEffect(() => {
         return () => {
-            clearTimer();
+            if (timerId.current !== null) {
+                clearInterval(timerId.current);
+            }
         };
     }, []);
 
-    return {
-        startTimer,
-        clearTimer,
-    };
+    return { startTimer, clearTimer };
 };
