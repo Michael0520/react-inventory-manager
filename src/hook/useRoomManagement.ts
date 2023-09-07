@@ -1,7 +1,7 @@
 import { ButtonAction } from "components/Button";
 import { useState } from "react";
 
-interface Room {
+export interface Room {
   adults: number;
   children: number;
 }
@@ -67,6 +67,22 @@ export const useRoomManagement = (
       newRoom[type]--;
     }
     return newRoom;
+  };
+
+  const getPersonCounterProps = (
+    roomIndex: number,
+    type: 'adults' | 'children'
+  ) => {
+    const room = rooms[roomIndex];
+    return {
+      label: type === 'adults' ? '大人' : '小孩',
+      count: room[type],
+      onIncrement: () => handleChange(roomIndex, type, ButtonAction.Increment),
+      onDecrement: () => handleChange(roomIndex, type, ButtonAction.Decrement),
+      isDisabledIncrement: room.adults + room.children >= maxGuestsPerRoom || totalInRooms >= totalGuests,
+      isDisabledDecrement: (type === 'adults' && room.adults <= 1) || (type === 'children' && room.children <= 0),
+      onChangeValue: (newCount: number) => handleInputChange(roomIndex, type, newCount.toString())
+    };
   };
 
   const handleChange = (
@@ -142,5 +158,6 @@ export const useRoomManagement = (
     unallocated,
     handleChange,
     handleInputChange,
+    getPersonCounterProps
   };
 };
