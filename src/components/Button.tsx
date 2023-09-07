@@ -1,5 +1,6 @@
 import { useTimer } from "../hook/useTimer";
 import { useMouseEvent } from "../hook/useMouseEvent";
+import { useMouseAndTouchEvents } from "hook/useMouseAndTouchEvents";
 
 export enum ButtonAction {
   Increment = "INCREMENT",
@@ -21,7 +22,7 @@ const Button: React.FC<ButtonProps> = ({ disabled, action, onClick }) => {
     100
   );
 
-  const mouseEvents = useMouseEvent(
+  const commonEvents = useMouseAndTouchEvents(
     () => {
       startTimer();
     },
@@ -40,7 +41,7 @@ const Button: React.FC<ButtonProps> = ({ disabled, action, onClick }) => {
     <button
       className={`select-none w-12 h-12 text-2xl border-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${disableButtonStyle}`}
       disabled={disabled}
-      {...mouseEvents}
+      {...commonEvents}
     >
       {label}
     </button>
