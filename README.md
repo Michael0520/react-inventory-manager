@@ -11,7 +11,7 @@
 ## Usage
 
 ```shell
-npm install install
+npm install
 
 npm run start
 ```
@@ -19,7 +19,7 @@ npm run start
 ## Build
 
 ```shell
-npm install install
+npm install
 
 npm build
 ```
