@@ -76,6 +76,7 @@ export const useRoomManagement = (
     const room = rooms[roomIndex];
     return {
       label: type === 'adults' ? '大人' : '小孩',
+      subLabel: type === "adults" ? "年齡 20+" : undefined,
       count: room[type],
       onIncrement: () => handleChange(roomIndex, type, ButtonAction.Increment),
       onDecrement: () => handleChange(roomIndex, type, ButtonAction.Decrement),
